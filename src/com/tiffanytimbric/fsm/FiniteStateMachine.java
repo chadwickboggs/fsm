@@ -9,11 +9,17 @@ import static java.lang.String.format;
 public class FiniteStateMachine {
 
     private final String name;
+    private final boolean ignoreUnknownEvents;
     private State currentState;
 
-    public FiniteStateMachine(String fsmName, final State initialState) {
+    public FiniteStateMachine(final String fsmName, final State initialState) {
+        this(fsmName, initialState, true);
+    }
+
+    public FiniteStateMachine(final String fsmName, final State initialState, boolean ignoreUnknownEvents) {
         this.name = fsmName;
         this.currentState = initialState;
+        this.ignoreUnknownEvents = ignoreUnknownEvents;
     }
 
     public String getName() {
@@ -30,7 +36,11 @@ public class FiniteStateMachine {
 
     public State handleEvent(final Event event) {
         if (currentState.transitions() == null) {
-            throw newUnrecognizedEventIllegalArgumentException(event);
+            if (!ignoreUnknownEvents) {
+                throw newUnrecognizedEventIllegalArgumentException(event);
+            }
+
+            return currentState;
         }
 
         final Transition[] transition = new Transition[1];
@@ -41,8 +51,17 @@ public class FiniteStateMachine {
                 aTransition.handler().accept(event);
                 transition[0] = aTransition;
             }, () -> {
-                throw newUnrecognizedEventIllegalArgumentException(event);
+                if (!ignoreUnknownEvents) {
+                    throw newUnrecognizedEventIllegalArgumentException(event);
+                }
             });
+        if (transition[0] == null) {
+            if (!ignoreUnknownEvents) {
+                throw newUnrecognizedEventIllegalArgumentException(event);
+            }
+
+            return currentState;
+        }
 
         return currentState = transition[0].toState();
     }
@@ -57,7 +76,7 @@ public class FiniteStateMachine {
 
     @Override
     public String toString() {
-        return format("{name='%s', currentState=%s}", name, currentState);
+        return format("{name='%s', ignoreUnknownEvents=%b, currentState=%s}", name, ignoreUnknownEvents, currentState);
     }
 
     @Override

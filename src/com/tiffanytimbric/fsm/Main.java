@@ -7,12 +7,18 @@ public class Main {
         final FiniteStateMachine fsm = createFsm("Test FSM");
         System.out.println("FSM Definition:" + fsm);
 
-        System.out.printf("%s: Start%n", fsm.getName());
+        System.out.printf("%n%s: Start%n", fsm.getName());
 
         System.out.printf("\tCurrent State: \"%s\"%n", fsm.getCurrentState().name());
 
         fsm.handleEvent("Lunch Time");
         System.out.printf("\tCurrent State: \"%s\"%n", fsm.getCurrentState().name());
+
+        final String eventName = "Bus Arrives";
+        System.out.printf("%nSending unknown event: \"%s\"%n", eventName);
+        fsm.handleEvent(eventName);
+        System.out.printf("\tCurrent State: \"%s\"%n", fsm.getCurrentState().name());
+        System.out.println();
 
         fsm.handleEvent("Afternoon Shift Start");
         System.out.printf("\tCurrent State: \"%s\"%n", fsm.getCurrentState().name());
