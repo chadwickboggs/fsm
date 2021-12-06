@@ -4,15 +4,14 @@ package com.tiffanytimbric.fsm;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+import static java.lang.String.format;
+
 
 public record Transition(Event event, State toState, Consumer<Event> handler) {
 
     @Override
     public String toString() {
-        return "Transition{" +
-            "event=" + event +
-            ", toState=" + toState +
-            '}';
+        return format("{ event=%s, toState=%s}", event, toState);
     }
 
     @Override

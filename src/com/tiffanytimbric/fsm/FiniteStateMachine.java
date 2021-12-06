@@ -2,7 +2,8 @@ package com.tiffanytimbric.fsm;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Optional;
+
+import static java.lang.String.format;
 
 
 public class FiniteStateMachine {
@@ -29,24 +30,25 @@ public class FiniteStateMachine {
 
     public State handleEvent(final Event event) {
         if (currentState.transitions() == null) {
-            return throwUnrecognizedEventIllegalArgumentException(event);
+            throw newUnrecognizedEventIllegalArgumentException(event);
         }
 
-        final Optional<Transition> transitionOpt = Arrays.stream(currentState.transitions())
-            .filter(transition -> transition.event().equals(event))
-            .findFirst();
-        if (transitionOpt.isEmpty()) {
-            throwUnrecognizedEventIllegalArgumentException(event);
-        }
+        final Transition[] transition = new Transition[1];
+        Arrays.stream(currentState.transitions())
+            .filter(aTransition -> aTransition.event().equals(event))
+            .findFirst()
+            .ifPresentOrElse(aTransition -> {
+                aTransition.handler().accept(event);
+                transition[0] = aTransition;
+            }, () -> {
+                throw newUnrecognizedEventIllegalArgumentException(event);
+            });
 
-        final Transition transition = transitionOpt.get();
-        transition.handler().accept(event);
-
-        return currentState = transition.toState();
+        return currentState = transition[0].toState();
     }
 
-    private State throwUnrecognizedEventIllegalArgumentException(final Event event) {
-        throw new IllegalArgumentException(String.format(
+    private IllegalArgumentException newUnrecognizedEventIllegalArgumentException(final Event event) {
+        return new IllegalArgumentException(format(
             "Unrecognized event.  Current state contains no handler for the specified event."
                 + "  Current State: \"%s\", Specified Event: \"%s\"",
             currentState, event
@@ -55,10 +57,7 @@ public class FiniteStateMachine {
 
     @Override
     public String toString() {
-        return "FiniteStateMachine{" +
-            "name='" + name + '\'' +
-            ", currentState=" + currentState +
-            '}';
+        return format("{name='%s', currentState=%s}", name, currentState);
     }
 
     @Override

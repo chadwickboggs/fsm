@@ -4,15 +4,14 @@ package com.tiffanytimbric.fsm;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static java.lang.String.format;
+
 
 public record State(String name, Transition... transitions) {
 
     @Override
     public String toString() {
-        return "State{" +
-            "name='" + name + '\'' +
-            ", transitions=" + Arrays.toString(transitions) +
-            '}';
+        return format("{name='%s', transitions=%s}", name, Arrays.toString(transitions));
     }
 
     @Override

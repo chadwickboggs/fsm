@@ -5,6 +5,8 @@ public class Main {
 
     public static void main(String[] args) {
         final FiniteStateMachine fsm = createFsm("Test FSM");
+        System.out.println("FSM Definition:" + fsm);
+
         System.out.printf("%s: Start%n", fsm.getName());
 
         System.out.printf("\tCurrent State: \"%s\"%n", fsm.getCurrentState().name());
@@ -26,11 +28,11 @@ public class Main {
         final State lunchState = new State(
             "At Lunch", new Transition(
             afternoonShiftStartEvent, endState,
-            event -> System.out.printf("\t%s -> %s%n", event, endState.name())));
+            event -> System.out.printf("\tEvent: \"%s\" --transition_state-> \"%s\"%n", event.name(), endState.name())));
         final State initialState = new State(
             "Morning Shift", new Transition(
             lunchTimeEvent, lunchState,
-            event -> System.out.printf("\t%s -> %s%n", event, lunchState.name())));
+            event -> System.out.printf("\tEvent: \"%s\" --transition_state-> \"%s\"%n", event.name(), lunchState.name())));
 
         return new FiniteStateMachine(fsmName, initialState);
     }
