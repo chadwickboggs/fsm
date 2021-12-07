@@ -9,7 +9,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public interface Jsonable {
 
-    // <T> T fromJson(String fsmJson, Class<T> clazz);
     default <T> T fromJson(final String stateJson, final Class<T> clazz) {
         try {
             return JsonUtil.getObjectMapper().readValue(stateJson, clazz);
