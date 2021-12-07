@@ -1,11 +1,14 @@
 package com.tiffanytimbric.fsm;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
 import java.util.Arrays;
 import java.util.Objects;
 
 import static java.lang.String.format;
 
 
+@JsonAutoDetect
 public class FiniteStateMachine implements Jsonable {
 
     private final String name;
@@ -76,17 +79,6 @@ public class FiniteStateMachine implements Jsonable {
 
     public FiniteStateMachine fromJson(final String fsmJson) {
         return fromJson(fsmJson, FiniteStateMachine.class);
-    }
-
-    @Override
-    public <T> T fromJson(final String fsmJson, final Class<T> clazz) {
-        // TODO: Implement.
-        throw new RuntimeException("This method has not been implemented.");
-    }
-
-    @Override
-    public String toJson() {
-        return format("{name='%s', ignoreUnknownEvents=%b, currentState=%s}", name, ignoreUnknownEvents, currentState.toJson());
     }
 
     @Override

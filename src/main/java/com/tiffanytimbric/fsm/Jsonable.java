@@ -4,18 +4,36 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 
 public interface Jsonable {
 
-    <T> T fromJson(String fsmJson, Class<T> clazz);
-    String toJson();
+    // <T> T fromJson(String fsmJson, Class<T> clazz);
+    default <T> T fromJson(final String stateJson, final Class<T> clazz) {
+        try {
+            return JsonUtil.getObjectMapper().readValue(stateJson, clazz);
+        }
+        catch (JsonProcessingException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
 
-    default String toJson(Transition... transitions) {
+    default String toJson() {
+        try {
+            return JsonUtil.getObjectMapper().writeValueAsString(this);
+        }
+        catch (JsonProcessingException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    default String toJson(Jsonable... jsonable) {
         final StringBuilder buf = new StringBuilder("[");
-        final List<String> transitionJsons = Arrays.stream(transitions).map(Transition::toJson).toList();
-        IntStream.range(0, transitionJsons.size()).forEachOrdered(i -> {
-            buf.append(transitionJsons.get(i));
-            if (i < transitionJsons.size() - 1) {
+        final List<String> jsonables = Arrays.stream(jsonable).map(Jsonable::toJson).toList();
+        IntStream.range(0, jsonables.size()).forEachOrdered(i -> {
+            buf.append(jsonables.get(i));
+            if (i < jsonables.size() - 1) {
                 buf.append(", ");
             }
         });

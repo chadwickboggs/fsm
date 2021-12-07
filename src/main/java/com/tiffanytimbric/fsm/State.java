@@ -1,26 +1,19 @@
 package com.tiffanytimbric.fsm;
 
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import java.util.Objects;
 
 import static java.lang.String.format;
 
 
+@JsonAutoDetect
 public record State(String name, Transition... transitions) implements Jsonable {
 
     public State fromJson(final String fsmJson) {
         return fromJson(fsmJson, State.class);
-    }
-
-    @Override
-    public <T> T fromJson(final String fsmJson, final Class<T> clazz) {
-        // TODO: Implement.
-        throw new RuntimeException("This method has not been implemented.");
-    }
-
-    @Override
-    public String toJson() {
-        return format("{name='%s', transitions=%s}", name, toJson(transitions));
     }
 
     @Override
