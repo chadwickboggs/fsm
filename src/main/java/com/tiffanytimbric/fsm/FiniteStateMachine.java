@@ -1,9 +1,10 @@
 package com.tiffanytimbric.fsm;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 import static java.lang.String.format;
 
@@ -82,15 +83,24 @@ public class FiniteStateMachine implements Jsonable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FiniteStateMachine that = (FiniteStateMachine) o;
-        return name.equals(that.name) && currentState.equals(that.currentState);
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj == this) return true;
+        if (obj.getClass() != getClass()) return false;
+        FiniteStateMachine rhs = (FiniteStateMachine) obj;
+        return new EqualsBuilder()
+            .append(this.name, rhs.name)
+            .append(this.ignoreUnknownEvents, rhs.ignoreUnknownEvents)
+            .append(this.currentState, rhs.currentState)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, currentState);
+        return new HashCodeBuilder()
+            .append(name)
+            .append(ignoreUnknownEvents)
+            .append(currentState)
+            .toHashCode();
     }
 }

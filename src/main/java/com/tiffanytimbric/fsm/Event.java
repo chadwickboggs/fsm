@@ -1,8 +1,8 @@
 package com.tiffanytimbric.fsm;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-
-import java.util.Objects;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 
 @JsonAutoDetect
@@ -13,15 +13,21 @@ public record Event(String name) implements Jsonable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Event event = (Event) o;
-        return name.equals(event.name);
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj == this) return true;
+        if (obj.getClass() != getClass()) return false;
+        Event rhs = (Event) obj;
+        return new EqualsBuilder()
+            .append(this.name, rhs.name)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return new HashCodeBuilder()
+            .append(name)
+            .toHashCode();
     }
+
 }

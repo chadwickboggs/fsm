@@ -2,8 +2,9 @@ package com.tiffanytimbric.fsm;
 
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 
 
@@ -15,15 +16,24 @@ public record Transition(Event event, State toState, Consumer<Event> handler) im
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Transition that = (Transition) o;
-        return event.equals(that.event) && toState.equals(that.toState);
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj == this) return true;
+        if (obj.getClass() != getClass()) return false;
+        Transition rhs = (Transition) obj;
+        return new EqualsBuilder()
+            .append(this.event, rhs.event)
+            .append(this.toState, rhs.toState)
+            .append(this.handler, rhs.handler)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(event, toState);
+        return new HashCodeBuilder()
+            .append(event)
+            .append(toState)
+            .append(handler)
+            .toHashCode();
     }
 }
