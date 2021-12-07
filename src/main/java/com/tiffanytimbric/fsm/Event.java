@@ -5,10 +5,20 @@ import java.util.Objects;
 import static java.lang.String.format;
 
 
-public record Event(String name) {
+public record Event(String name) implements Jsonable {
+
+    public Event fromJson(final String fsmJson) {
+        return fromJson(fsmJson, Event.class);
+    }
 
     @Override
-    public String toString() {
+    public <T> T fromJson(final String fsmJson, final Class<T> clazz) {
+        // TODO: Implement.
+        throw new RuntimeException("This method has not been implemented.");
+    }
+
+    @Override
+    public String toJson() {
         return format("{name=%s}", name);
     }
 

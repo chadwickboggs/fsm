@@ -5,7 +5,7 @@ public class Main {
 
     public static void main(String[] args) {
         final FiniteStateMachine fsm = createFsm("Test FSM");
-        System.out.println("FSM Definition:" + fsm);
+        System.out.println("FSM Definition:" + fsm.toJson());
 
         System.out.printf("%n%s: Start%n", fsm.getName());
 
@@ -15,7 +15,7 @@ public class Main {
         System.out.printf("\tCurrent State: \"%s\"%n", fsm.getCurrentState().name());
 
         final String eventName = "Bus Arrives";
-        System.out.printf("%nSending unknown event: \"%s\"%n", eventName);
+        System.out.printf("%n\tSending unknown event: \"%s\"%n", eventName);
         fsm.handleEvent(eventName);
         System.out.printf("\tCurrent State: \"%s\"%n", fsm.getCurrentState().name());
         System.out.println();

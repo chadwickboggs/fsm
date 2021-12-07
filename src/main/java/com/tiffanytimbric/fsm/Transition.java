@@ -7,11 +7,21 @@ import java.util.function.Consumer;
 import static java.lang.String.format;
 
 
-public record Transition(Event event, State toState, Consumer<Event> handler) {
+public record Transition(Event event, State toState, Consumer<Event> handler) implements Jsonable {
+
+    public Transition fromJson(final String fsmJson) {
+        return fromJson(fsmJson, Transition.class);
+    }
 
     @Override
-    public String toString() {
-        return format("{ event=%s, toState=%s}", event, toState);
+    public <T> T fromJson(final String fsmJson, final Class<T> clazz) {
+        // TODO: Implement.
+        throw new RuntimeException("This method has not been implemented.");
+    }
+
+    @Override
+    public String toJson() {
+        return format("{event=%s, toState=%s}", event.toJson(), toState.toJson());
     }
 
     @Override

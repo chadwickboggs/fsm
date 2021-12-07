@@ -6,7 +6,7 @@ import java.util.Objects;
 import static java.lang.String.format;
 
 
-public class FiniteStateMachine {
+public class FiniteStateMachine implements Jsonable {
 
     private final String name;
     private final boolean ignoreUnknownEvents;
@@ -74,9 +74,19 @@ public class FiniteStateMachine {
         ));
     }
 
+    public FiniteStateMachine fromJson(final String fsmJson) {
+        return fromJson(fsmJson, FiniteStateMachine.class);
+    }
+
     @Override
-    public String toString() {
-        return format("{name='%s', ignoreUnknownEvents=%b, currentState=%s}", name, ignoreUnknownEvents, currentState);
+    public <T> T fromJson(final String fsmJson, final Class<T> clazz) {
+        // TODO: Implement.
+        throw new RuntimeException("This method has not been implemented.");
+    }
+
+    @Override
+    public String toJson() {
+        return format("{name='%s', ignoreUnknownEvents=%b, currentState=%s}", name, ignoreUnknownEvents, currentState.toJson());
     }
 
     @Override
