@@ -4,14 +4,12 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 import java.util.Objects;
 
-import static java.lang.String.format;
-
 
 @JsonAutoDetect
 public record Event(String name) implements Jsonable {
 
-    public Event fromJson(final String fsmJson) {
-        return fromJson(fsmJson, Event.class);
+    public static Event fromJson(final String eventJson) {
+        return JsonUtil.fromJson(eventJson, Event.class);
     }
 
     @Override

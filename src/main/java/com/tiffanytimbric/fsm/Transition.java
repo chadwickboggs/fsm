@@ -6,14 +6,12 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import static java.lang.String.format;
-
 
 @JsonAutoDetect
 public record Transition(Event event, State toState, Consumer<Event> handler) implements Jsonable {
 
-    public Transition fromJson(final String fsmJson) {
-        return fromJson(fsmJson, Transition.class);
+    public static Transition fromJson(final String transitionJson) {
+        return JsonUtil.fromJson(transitionJson, Transition.class);
     }
 
     @Override

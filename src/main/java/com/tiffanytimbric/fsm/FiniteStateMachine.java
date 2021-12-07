@@ -77,8 +77,8 @@ public class FiniteStateMachine implements Jsonable {
         ));
     }
 
-    public FiniteStateMachine fromJson(final String fsmJson) {
-        return fromJson(fsmJson, FiniteStateMachine.class);
+    public static FiniteStateMachine fromJson(final String fsmJson) {
+        return JsonUtil.fromJson(fsmJson, FiniteStateMachine.class);
     }
 
     @Override

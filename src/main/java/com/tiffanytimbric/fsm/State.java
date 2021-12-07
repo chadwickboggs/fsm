@@ -2,18 +2,15 @@ package com.tiffanytimbric.fsm;
 
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.Objects;
-
-import static java.lang.String.format;
 
 
 @JsonAutoDetect
 public record State(String name, Transition... transitions) implements Jsonable {
 
-    public State fromJson(final String fsmJson) {
-        return fromJson(fsmJson, State.class);
+    public static State fromJson(final String stateJson) {
+        return JsonUtil.fromJson(stateJson, State.class);
     }
 
     @Override
