@@ -27,18 +27,4 @@ public interface Jsonable {
         }
     }
 
-    default String toJson(Jsonable... jsonable) {
-        final StringBuilder buf = new StringBuilder("[");
-        final List<String> jsonables = Arrays.stream(jsonable).map(Jsonable::toJson).toList();
-        IntStream.range(0, jsonables.size()).forEachOrdered(i -> {
-            buf.append(jsonables.get(i));
-            if (i < jsonables.size() - 1) {
-                buf.append(", ");
-            }
-        });
-        buf.append("]");
-
-        return buf.toString();
-    }
-
 }
