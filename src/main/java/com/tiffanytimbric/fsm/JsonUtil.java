@@ -6,7 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonUtil {
 
-    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static ObjectMapper objectMapper;
+
+    static {
+        objectMapper = new ObjectMapper();
+    }
 
     public static ObjectMapper getObjectMapper() {
         return objectMapper;
@@ -14,7 +18,7 @@ public class JsonUtil {
 
     public static <T> T fromJson(final String stateJson, final Class<T> clazz) {
         try {
-            return JsonUtil.getObjectMapper().readValue(stateJson, clazz);
+            return getObjectMapper().readValue(stateJson, clazz);
         }
         catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -23,7 +27,7 @@ public class JsonUtil {
 
     public static String toJson(final Jsonable jsonable) {
         try {
-            return JsonUtil.getObjectMapper().writeValueAsString(jsonable);
+            return getObjectMapper().writeValueAsString(jsonable);
         }
         catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage(), e);

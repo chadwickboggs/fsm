@@ -1,14 +1,14 @@
 package com.tiffanytimbric.fsm;
 
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.function.Consumer;
 
 
-@JsonAutoDetect
+@JsonSerialize
 public record Transition(Event event, State toState, Consumer<Event> handler) implements Jsonable {
 
     public static Transition fromJson(final String transitionJson) {

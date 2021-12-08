@@ -1,6 +1,6 @@
 package com.tiffanytimbric.fsm;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -9,7 +9,7 @@ import java.util.Arrays;
 import static java.lang.String.format;
 
 
-@JsonAutoDetect
+@JsonSerialize
 public class FiniteStateMachine implements Jsonable {
 
     private final String name;
