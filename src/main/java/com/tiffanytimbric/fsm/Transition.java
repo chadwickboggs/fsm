@@ -1,6 +1,8 @@
 package com.tiffanytimbric.fsm;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -9,7 +11,8 @@ import java.util.function.Consumer;
 
 
 @JsonSerialize
-public record Transition(Event event, State toState, Consumer<Event> handler) implements Jsonable {
+@JsonTypeInfo( use = JsonTypeInfo.Id.CLASS )
+public record Transition(Event event, State toState, @JsonIgnore Consumer<Event> handler) implements Jsonable {
 
     public static Transition fromJson(final String transitionJson) {
         return JsonUtil.fromJson(transitionJson, Transition.class);

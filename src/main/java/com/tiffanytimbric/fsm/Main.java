@@ -5,10 +5,11 @@ public class Main {
 
     public static void main(String[] args) {
         final FiniteStateMachine fsm = createFsm("Test FSM");
-        System.out.println("FSM Definition:" + fsm.toJson());
+
+        final String fsmJson = fsm.toJson();
+        System.out.printf("FSM JSON Definition:%n%s%n", fsmJson);
 
         System.out.printf("%n%s: Start%n", fsm.getName());
-
         System.out.printf("\tCurrent State: \"%s\"%n", fsm.getCurrentState().name());
 
         fsm.handleEvent("Lunch Time");
@@ -24,6 +25,9 @@ public class Main {
         System.out.printf("\tCurrent State: \"%s\"%n", fsm.getCurrentState().name());
 
         System.out.printf("%s: End%n", fsm.getName());
+
+        final FiniteStateMachine fsmFromJson = FiniteStateMachine.fromJson(fsmJson);
+        System.out.printf("%nFSM From-JSON JSON Definition:%n%s%n", fsmFromJson.toJson());
     }
 
     private static FiniteStateMachine createFsm(final String fsmName) {

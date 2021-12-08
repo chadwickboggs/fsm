@@ -1,11 +1,13 @@
 package com.tiffanytimbric.fsm;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 
 @JsonSerialize
+@JsonTypeInfo( use = JsonTypeInfo.Id.CLASS )
 public record Event(String name) implements Jsonable {
 
     public static Event fromJson(final String eventJson) {

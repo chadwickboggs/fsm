@@ -1,5 +1,6 @@
 package com.tiffanytimbric.fsm;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -10,11 +11,15 @@ import static java.lang.String.format;
 
 
 @JsonSerialize
+@JsonTypeInfo( use = JsonTypeInfo.Id.CLASS )
 public class FiniteStateMachine implements Jsonable {
 
-    private final String name;
-    private final boolean ignoreUnknownEvents;
+    private String name;
+    private boolean ignoreUnknownEvents;
     private State currentState;
+
+    private FiniteStateMachine() {
+    }
 
     public FiniteStateMachine(final String fsmName, final State initialState) {
         this(fsmName, initialState, true);
@@ -32,6 +37,10 @@ public class FiniteStateMachine implements Jsonable {
 
     public State getCurrentState() {
         return currentState;
+    }
+
+    public boolean isIgnoreUnknownEvents() {
+        return ignoreUnknownEvents;
     }
 
     public State handleEvent(final String eventName) {

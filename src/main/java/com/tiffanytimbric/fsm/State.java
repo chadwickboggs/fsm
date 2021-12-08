@@ -1,12 +1,14 @@
 package com.tiffanytimbric.fsm;
 
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 
 @JsonSerialize
+@JsonTypeInfo( use = JsonTypeInfo.Id.CLASS )
 public record State(String name, Transition... transitions) implements Jsonable {
 
     public static State fromJson(final String stateJson) {
