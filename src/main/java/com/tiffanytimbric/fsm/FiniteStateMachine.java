@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.util.Arrays;
+import java.util.Optional;
 
 import static java.lang.String.format;
 
@@ -56,23 +56,19 @@ public class FiniteStateMachine implements Jsonable {
             return currentState;
         }
 
-        final Transition[] transition = new Transition[1];
-        Arrays.stream(currentState.transitions())
-            .filter(aTransition -> aTransition.event().equals(event))
-            .findFirst()
-            .ifPresent(aTransition -> {
-                aTransition.handler().accept(event);
-                transition[0] = aTransition;
-            });
-        if (transition[0] == null) {
-            if (!ignoreUnknownEvents) {
-                throw newUnrecognizedEventIllegalArgumentException(event);
-            }
+        final Optional<Transition> transitionOpt = currentState.getTransitionFor(event);
+        if (transitionOpt.isPresent()) {
+            final Transition transition = transitionOpt.get();
+            transition.handler().accept(event);
 
-            return currentState;
+            return currentState = transition.toState();
         }
 
-        return currentState = transition[0].toState();
+        if (!ignoreUnknownEvents) {
+            throw newUnrecognizedEventIllegalArgumentException(event);
+        }
+
+        return currentState;
     }
 
     private IllegalArgumentException newUnrecognizedEventIllegalArgumentException(final Event event) {

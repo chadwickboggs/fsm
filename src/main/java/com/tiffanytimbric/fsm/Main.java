@@ -1,6 +1,9 @@
 package com.tiffanytimbric.fsm;
 
 
+import java.util.stream.Collectors;
+
+
 public class Main {
 
     public static void main(String[] args) {
@@ -10,19 +13,30 @@ public class Main {
         System.out.printf("FSM JSON Definition:%n%s%n", fsmJson);
 
         System.out.printf("%n%s: Start%n", fsm.getName());
-        System.out.printf("\tCurrent State: \"%s\"%n", fsm.getCurrentState().name());
+        State currentState = fsm.getCurrentState();
+        System.out.printf("\tCurrent State: \"%s\"%n", currentState.name());
+        System.out.printf("\tSupported Events: %s%n%n", currentState.getEvents().stream().map(Event::name).collect(Collectors.toList()));
 
-        fsm.handleEvent("Lunch Time");
-        System.out.printf("\tCurrent State: \"%s\"%n", fsm.getCurrentState().name());
+        String eventName = "Lunch Time";
+        System.out.printf("\tSending event: \"%s\"%n", eventName);
+        fsm.handleEvent(eventName);
+        currentState = fsm.getCurrentState();
+        System.out.printf("\tCurrent State: \"%s\"%n", currentState.name());
+        System.out.printf("\tSupported Events: %s%n", currentState.getEvents().stream().map(Event::name).collect(Collectors.toList()));
 
-        final String eventName = "Bus Arrives";
+        eventName = "Bus Arrives";
         System.out.printf("%n\tSending unknown event: \"%s\"%n", eventName);
         fsm.handleEvent(eventName);
-        System.out.printf("\tCurrent State: \"%s\"%n", fsm.getCurrentState().name());
-        System.out.println();
+        currentState = fsm.getCurrentState();
+        System.out.printf("\tCurrent State: \"%s\"%n", currentState.name());
+        System.out.printf("\tSupported Events: %s%n", currentState.getEvents().stream().map(Event::name).collect(Collectors.toList()));
 
-        fsm.handleEvent("Afternoon Shift Start");
-        System.out.printf("\tCurrent State: \"%s\"%n", fsm.getCurrentState().name());
+        eventName = "Afternoon Shift Start";
+        System.out.printf("%n\tSending event: \"%s\"%n", eventName);
+        fsm.handleEvent(eventName);
+        currentState = fsm.getCurrentState();
+        System.out.printf("\tCurrent State: \"%s\"%n", currentState.name());
+        System.out.printf("\tSupported Events: %s%n", currentState.getEvents().stream().map(Event::name).collect(Collectors.toList()));
 
         System.out.printf("%s: End%n", fsm.getName());
 
