@@ -60,13 +60,9 @@ public class FiniteStateMachine implements Jsonable {
         Arrays.stream(currentState.transitions())
             .filter(aTransition -> aTransition.event().equals(event))
             .findFirst()
-            .ifPresentOrElse(aTransition -> {
+            .ifPresent(aTransition -> {
                 aTransition.handler().accept(event);
                 transition[0] = aTransition;
-            }, () -> {
-                if (!ignoreUnknownEvents) {
-                    throw newUnrecognizedEventIllegalArgumentException(event);
-                }
             });
         if (transition[0] == null) {
             if (!ignoreUnknownEvents) {
