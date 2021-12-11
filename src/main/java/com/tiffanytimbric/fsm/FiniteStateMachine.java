@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
@@ -16,6 +19,7 @@ public class FiniteStateMachine implements Jsonable {
 
     private String name;
     private boolean ignoreUnknownEvents;
+    private State initialState;
     private State currentState;
 
     private FiniteStateMachine() {
@@ -27,6 +31,7 @@ public class FiniteStateMachine implements Jsonable {
 
     public FiniteStateMachine(final String fsmName, final State initialState, boolean ignoreUnknownEvents) {
         this.name = fsmName;
+        this.initialState = initialState;
         this.currentState = initialState;
         this.ignoreUnknownEvents = ignoreUnknownEvents;
     }
@@ -35,12 +40,28 @@ public class FiniteStateMachine implements Jsonable {
         return name;
     }
 
+    public State getInitialState() {
+        return initialState;
+    }
+
     public State getCurrentState() {
         return currentState;
     }
 
     public boolean isIgnoreUnknownEvents() {
         return ignoreUnknownEvents;
+    }
+
+    public List<Event> getEventsFor(final String stateName) {
+        return findState(stateName).map(State::getEvents).orElse(new ArrayList<>());
+    }
+
+    public Optional<State> findState(final String stateName) {
+        if (initialState.name().equals(stateName)) {
+            return Optional.of(initialState);
+        }
+
+        return findState(stateName, initialState.transitions());
     }
 
     public State handleEvent(final String eventName) {
@@ -71,14 +92,6 @@ public class FiniteStateMachine implements Jsonable {
         return currentState;
     }
 
-    private IllegalArgumentException newUnrecognizedEventIllegalArgumentException(final Event event) {
-        return new IllegalArgumentException(format(
-            "Unrecognized event.  Current state contains no handler for the specified event."
-                + "  Current State: \"%s\", Specified Event: \"%s\"",
-            currentState, event
-        ));
-    }
-
     public static FiniteStateMachine fromJson(final String fsmJson) {
         return JsonUtil.fromJson(fsmJson, FiniteStateMachine.class);
     }
@@ -103,5 +116,24 @@ public class FiniteStateMachine implements Jsonable {
             .append(ignoreUnknownEvents)
             .append(currentState)
             .toHashCode();
+    }
+
+    private Optional<State> findState(final String stateName, final Transition[] transitions) {
+        if (transitions == null) {
+            return Optional.empty();
+        }
+
+        return Arrays.stream(transitions)
+            .map(Transition::toState)
+            .filter(state -> state.name().equals(stateName))
+            .findFirst();
+    }
+
+    private IllegalArgumentException newUnrecognizedEventIllegalArgumentException(final Event event) {
+        return new IllegalArgumentException(format(
+            "Unrecognized event.  Current state contains no handler for the specified event."
+                + "  Current State: \"%s\", Specified Event: \"%s\"",
+            currentState, event
+        ));
     }
 }
