@@ -9,14 +9,21 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.function.BiConsumer;
 
-// TODO: Add a "toStateName" property which may be used to enable cyclic graphs.
-
 @JsonSerialize
 @JsonTypeInfo( use = JsonTypeInfo.Id.CLASS )
-public record Transition<T, J>(Event<T> event, State<J> toState, @JsonIgnore BiConsumer<State<J>, Event<T>> handler) implements Jsonable {
+public record Transition<T, J>(
+    Event<T> event, State<J> toState, String toStateName, @JsonIgnore BiConsumer<State<J>, Event<T>> handler) implements Jsonable {
 
     public static Transition fromJson(final String transitionJson) {
         return JsonUtil.fromJson(transitionJson, Transition.class);
+    }
+
+    public Transition(Event<T> event, State<J> toState, BiConsumer<State<J>, Event<T>> handler) {
+        this(event, toState, null, handler);
+    }
+
+    public Transition(Event<T> event, String toStateName, BiConsumer<State<J>, Event<T>> handler) {
+        this(event, null, toStateName, handler);
     }
 
     @Override
@@ -28,6 +35,7 @@ public record Transition<T, J>(Event<T> event, State<J> toState, @JsonIgnore BiC
         return new EqualsBuilder()
             .append(this.event, rhs.event)
             .append(this.toState, rhs.toState)
+            .append(this.toStateName, rhs.toStateName)
             .append(this.handler, rhs.handler)
             .isEquals();
     }
@@ -37,6 +45,7 @@ public record Transition<T, J>(Event<T> event, State<J> toState, @JsonIgnore BiC
         return new HashCodeBuilder()
             .append(event)
             .append(toState)
+            .append(toStateName)
             .append(handler)
             .toHashCode();
     }

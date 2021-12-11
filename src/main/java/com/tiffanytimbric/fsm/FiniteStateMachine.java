@@ -62,7 +62,7 @@ public class FiniteStateMachine<T> implements Jsonable {
         return findState(stateName).map(State::getEvents).orElse(new ArrayList<>());
     }
 
-    public Optional<State> findState(final String stateName) {
+    public Optional<State<T>> findState(final String stateName) {
         if (initialState.name().equals(stateName)) {
             return Optional.of(initialState);
         }
@@ -92,7 +92,7 @@ public class FiniteStateMachine<T> implements Jsonable {
             final Transition transition = transitionOpt.get();
             transition.handler().accept(currentState, event);
 
-            return currentState = transition.toState();
+            return currentState = transition.toState() != null ? transition.toState() : findState(transition.toStateName()).get();
         }
 
         if (!ignoreUnknownEvents) {
@@ -130,7 +130,7 @@ public class FiniteStateMachine<T> implements Jsonable {
             .toHashCode();
     }
 
-    private Optional<State> findState(final String stateName, final Transition[] transitions) {
+    private <T, J> Optional<State<J>> findState(final String stateName, final Transition<T, J>[] transitions) {
         if (transitions == null) {
             return Optional.empty();
         }

@@ -22,7 +22,6 @@ public record Event<T>(String name, T dataArg) implements Jsonable {
         Event rhs = (Event) obj;
         return new EqualsBuilder()
             .append(this.name, rhs.name)
-            .append(this.dataArg, rhs.dataArg)
             .isEquals();
     }
 
@@ -30,7 +29,6 @@ public record Event<T>(String name, T dataArg) implements Jsonable {
     public int hashCode() {
         return new HashCodeBuilder()
             .append(name)
-            .append(dataArg)
             .toHashCode();
     }
 

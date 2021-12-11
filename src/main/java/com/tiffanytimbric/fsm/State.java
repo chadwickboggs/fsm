@@ -39,7 +39,7 @@ public record State<T>(String name, T dataItem, Transition... transitions) imple
         }
 
         return Arrays.stream(transitions)
-            .filter(transition -> transition.event().equals(event))
+            .filter(transition -> event.equals(transition.event()))
             .findFirst();
     }
 
