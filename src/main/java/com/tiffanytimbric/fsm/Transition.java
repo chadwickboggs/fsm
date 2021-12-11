@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.function.BiConsumer;
 
+// TODO: Add a "toStateName" property which may be used to enable cyclic graphs.
 
 @JsonSerialize
 @JsonTypeInfo( use = JsonTypeInfo.Id.CLASS )
