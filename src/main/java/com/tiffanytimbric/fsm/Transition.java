@@ -7,12 +7,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 
 @JsonSerialize
 @JsonTypeInfo( use = JsonTypeInfo.Id.CLASS )
-public record Transition(Event event, State toState, @JsonIgnore Consumer<Event> handler) implements Jsonable {
+public record Transition<T, J>(Event<T> event, State<J> toState, @JsonIgnore BiConsumer<State<J>, Event<T>> handler) implements Jsonable {
 
     public static Transition fromJson(final String transitionJson) {
         return JsonUtil.fromJson(transitionJson, Transition.class);

@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @JsonSerialize
 @JsonTypeInfo( use = JsonTypeInfo.Id.CLASS )
-public record Event(String name) implements Jsonable {
+public record Event<T>(String name, T dataArg) implements Jsonable {
 
     public static Event fromJson(final String eventJson) {
         return JsonUtil.fromJson(eventJson, Event.class);
@@ -22,6 +22,7 @@ public record Event(String name) implements Jsonable {
         Event rhs = (Event) obj;
         return new EqualsBuilder()
             .append(this.name, rhs.name)
+            .append(this.dataArg, rhs.dataArg)
             .isEquals();
     }
 
@@ -29,6 +30,7 @@ public record Event(String name) implements Jsonable {
     public int hashCode() {
         return new HashCodeBuilder()
             .append(name)
+            .append(dataArg)
             .toHashCode();
     }
 

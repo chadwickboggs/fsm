@@ -15,22 +15,24 @@ import static java.lang.String.format;
 
 @JsonSerialize
 @JsonTypeInfo( use = JsonTypeInfo.Id.CLASS )
-public class FiniteStateMachine implements Jsonable {
+public class FiniteStateMachine<T> implements Jsonable {
 
     private String name;
+    private T dataItem;
     private boolean ignoreUnknownEvents;
-    private State initialState;
-    private State currentState;
+    private State<T> initialState;
+    private State<T> currentState;
 
     private FiniteStateMachine() {
     }
 
-    public FiniteStateMachine(final String fsmName, final State initialState) {
-        this(fsmName, initialState, true);
+    public  FiniteStateMachine(final String fsmName, final T dataItem, final State<T> initialState) {
+        this(fsmName, dataItem, initialState, true);
     }
 
-    public FiniteStateMachine(final String fsmName, final State initialState, boolean ignoreUnknownEvents) {
+    public FiniteStateMachine(final String fsmName, final T dataItem, final State<T> initialState, boolean ignoreUnknownEvents) {
         this.name = fsmName;
+        this.dataItem = dataItem;
         this.initialState = initialState;
         this.currentState = initialState;
         this.ignoreUnknownEvents = ignoreUnknownEvents;
@@ -40,11 +42,15 @@ public class FiniteStateMachine implements Jsonable {
         return name;
     }
 
-    public State getInitialState() {
+    public T getDataItem() {
+        return dataItem;
+    }
+
+    public State<T> getInitialState() {
         return initialState;
     }
 
-    public State getCurrentState() {
+    public State<T> getCurrentState() {
         return currentState;
     }
 
@@ -64,11 +70,15 @@ public class FiniteStateMachine implements Jsonable {
         return findState(stateName, initialState.transitions());
     }
 
-    public State handleEvent(final String eventName) {
-        return handleEvent(new Event(eventName));
+    public State<T> handleEvent(final String eventName) {
+        return handleEvent(new Event(eventName, null));
     }
 
-    public State handleEvent(final Event event) {
+    public State<T> handleEvent(final String eventName, final T dataArg) {
+        return handleEvent(new Event(eventName, dataArg));
+    }
+
+    public State<T> handleEvent(final Event<T> event) {
         if (currentState.transitions() == null) {
             if (!ignoreUnknownEvents) {
                 throw newUnrecognizedEventIllegalArgumentException(event);
@@ -80,7 +90,7 @@ public class FiniteStateMachine implements Jsonable {
         final Optional<Transition> transitionOpt = currentState.getTransitionFor(event);
         if (transitionOpt.isPresent()) {
             final Transition transition = transitionOpt.get();
-            transition.handler().accept(event);
+            transition.handler().accept(currentState, event);
 
             return currentState = transition.toState();
         }
@@ -104,6 +114,7 @@ public class FiniteStateMachine implements Jsonable {
         FiniteStateMachine rhs = (FiniteStateMachine) obj;
         return new EqualsBuilder()
             .append(this.name, rhs.name)
+            .append(this.dataItem, rhs.dataItem)
             .append(this.ignoreUnknownEvents, rhs.ignoreUnknownEvents)
             .append(this.currentState, rhs.currentState)
             .isEquals();
@@ -113,6 +124,7 @@ public class FiniteStateMachine implements Jsonable {
     public int hashCode() {
         return new HashCodeBuilder()
             .append(name)
+            .append(dataItem)
             .append(ignoreUnknownEvents)
             .append(currentState)
             .toHashCode();

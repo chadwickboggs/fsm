@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @JsonSerialize
 @JsonTypeInfo( use = JsonTypeInfo.Id.CLASS )
-public record State(String name, Transition... transitions) implements Jsonable {
+public record State<T>(String name, T dataItem, Transition... transitions) implements Jsonable {
 
     public static State fromJson(final String stateJson) {
         return JsonUtil.fromJson(stateJson, State.class);
@@ -30,7 +30,7 @@ public record State(String name, Transition... transitions) implements Jsonable 
     }
 
     public Optional<Transition> getTransitionFor(final String eventName) {
-        return getTransitionFor(new Event(eventName));
+        return getTransitionFor(new Event(eventName, null));
     }
 
     public Optional<Transition> getTransitionFor(final Event event) {
@@ -51,6 +51,7 @@ public record State(String name, Transition... transitions) implements Jsonable 
         State rhs = (State) obj;
         return new EqualsBuilder()
             .append(this.name, rhs.name)
+            .append(this.dataItem, rhs.dataItem)
             .append(this.transitions, rhs.transitions)
             .isEquals();
     }
@@ -59,6 +60,7 @@ public record State(String name, Transition... transitions) implements Jsonable 
     public int hashCode() {
         return new HashCodeBuilder()
             .append(name)
+            .append(dataItem)
             .append(transitions)
             .toHashCode();
     }
