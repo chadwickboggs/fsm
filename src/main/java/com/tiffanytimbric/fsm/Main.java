@@ -15,47 +15,29 @@ public class Main {
         System.out.printf("%n%s, %s: Start%n", fsm.getName(), fsm.getDataItem());
         State<String> currentState = fsm.getCurrentState();
         System.out.printf("\tCurrent State: \"%s\", \"%s\"%n", currentState.name(), currentState.dataItem());
-        System.out.printf("\tSupported Events: %s%n%n", currentState.getEvents().stream().map(Event::name).collect(Collectors.toList()));
-
-        String eventName = "Lunch Time";
-        System.out.printf("\tSending event: \"%s\"%n", eventName);
-        fsm.handleEvent(eventName, "event_dataArg");
-        currentState = fsm.getCurrentState();
-        System.out.printf("\tCurrent State: \"%s\", \"%s\"%n", currentState.name(), currentState.dataItem());
         System.out.printf("\tSupported Events: %s%n", currentState.getEvents().stream().map(Event::name).collect(Collectors.toList()));
 
-        eventName = "Bus Arrives";
-        System.out.printf("%n\tSending unknown event: \"%s\"%n", eventName);
-        fsm.handleEvent(eventName, "event_dataArg");
-        currentState = fsm.getCurrentState();
-        System.out.printf("\tCurrent State: \"%s\", \"%s\"%n", currentState.name(), currentState.dataItem());
-        System.out.printf("\tSupported Events: %s%n", currentState.getEvents().stream().map(Event::name).collect(Collectors.toList()));
-
-        eventName = "Afternoon Shift Start";
-        System.out.printf("%n\tSending event: \"%s\"%n", eventName);
-        fsm.handleEvent(eventName, "event_dataArg");
-        currentState = fsm.getCurrentState();
-        System.out.printf("\tCurrent State: \"%s\", \"%s\"%n", currentState.name(), currentState.dataItem());
-        System.out.printf("\tSupported Events: %s%n", currentState.getEvents().stream().map(Event::name).collect(Collectors.toList()));
-
-        eventName = "Postpone Shift Start";
-        System.out.printf("%n\tSending event: \"%s\"%n", eventName);
-        fsm.handleEvent(eventName, "event_dataArg");
-        currentState = fsm.getCurrentState();
-        System.out.printf("\tCurrent State: \"%s\", \"%s\"%n", currentState.name(), currentState.dataItem());
-        System.out.printf("\tSupported Events: %s%n", currentState.getEvents().stream().map(Event::name).collect(Collectors.toList()));
-
-        eventName = "Afternoon Shift Start";
-        System.out.printf("%n\tSending event: \"%s\"%n", eventName);
-        fsm.handleEvent(eventName, "event_dataArg");
-        currentState = fsm.getCurrentState();
-        System.out.printf("\tCurrent State: \"%s\", \"%s\"%n", currentState.name(), currentState.dataItem());
-        System.out.printf("\tSupported Events: %s%n", currentState.getEvents().stream().map(Event::name).collect(Collectors.toList()));
+        sendEvent("Lunch Time", "event_dataArg", fsm);
+        sendEvent("Bus Arrives", "event_dataArg", fsm);
+        sendEvent("Afternoon Shift Start", "event_dataArg", fsm);
+        sendEvent("Postpone Shift Start", "event_dataArg", fsm);
+        sendEvent("Afternoon Shift Start", "event_dataArg", fsm);
 
         System.out.printf("%s: End%n", fsm.getName());
 
         final FiniteStateMachine<String> fsmFromJson = FiniteStateMachine.fromJson(fsmJson);
         System.out.printf("%nFSM From-JSON JSON Definition:%n%s%n", fsmFromJson.toJson());
+    }
+
+    private static <T> void sendEvent(final String eventName, final T event_dataArg, final FiniteStateMachine<T> fsm) {
+        System.out.printf("%n\tSending event: \"%s\"%n", eventName);
+
+        fsm.handleEvent(eventName, event_dataArg);
+
+        final State<T> currentState = fsm.getCurrentState();
+
+        System.out.printf("\tCurrent State: \"%s\", \"%s\"%n", currentState.name(), currentState.dataItem());
+        System.out.printf("\tSupported Events: %s%n", currentState.getEvents().stream().map(Event::name).collect(Collectors.toList()));
     }
 
     private static FiniteStateMachine<String> createFsm(final String fsmName) {
