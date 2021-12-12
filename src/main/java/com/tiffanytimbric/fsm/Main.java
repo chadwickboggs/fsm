@@ -33,7 +33,6 @@ public class Main {
         System.out.printf("%n\tSending event: \"%s\"%n", eventName);
 
         fsm.handleEvent(eventName, event_dataArg);
-
         final State<T> currentState = fsm.getCurrentState();
 
         System.out.printf("\tCurrent State: \"%s\", \"%s\"%n", currentState.name(), currentState.dataItem());
