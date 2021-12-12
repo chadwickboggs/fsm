@@ -17,11 +17,11 @@ public class Main {
         System.out.printf("\tCurrent State: \"%s\", \"%s\"%n", currentState.name(), currentState.dataItem());
         System.out.printf("\tSupported Events: %s%n", currentState.getEvents().stream().map(Event::name).collect(Collectors.toList()));
 
-        sendEvent("Lunch Time", "event_dataArg", fsm);
-        sendEvent("Bus Arrives", "event_dataArg", fsm);
-        sendEvent("Afternoon Shift Start", "event_dataArg", fsm);
-        sendEvent("Postpone Shift Start", "event_dataArg", fsm);
-        sendEvent("Afternoon Shift Start", "event_dataArg", fsm);
+        sendEventVerbose("Lunch Time", "event_dataArg", fsm);
+        sendEventVerbose("Bus Arrives", "event_dataArg", fsm);
+        sendEventVerbose("Afternoon Shift Start", "event_dataArg", fsm);
+        sendEventVerbose("Postpone Shift Start", "event_dataArg", fsm);
+        sendEventVerbose("Afternoon Shift Start", "event_dataArg", fsm);
 
         System.out.printf("%s: End%n", fsm.getName());
 
@@ -29,7 +29,7 @@ public class Main {
         System.out.printf("%nFSM From-JSON JSON Definition:%n%s%n", fsmFromJson.toJson());
     }
 
-    private static <T> void sendEvent(final String eventName, final T event_dataArg, final FiniteStateMachine<T> fsm) {
+    private static <T> void sendEventVerbose(final String eventName, final T event_dataArg, final FiniteStateMachine<T> fsm) {
         System.out.printf("%n\tSending event: \"%s\"%n", eventName);
 
         fsm.handleEvent(eventName, event_dataArg);
