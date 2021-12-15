@@ -1,6 +1,7 @@
 package com.tiffanytimbric.fsm;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -21,6 +22,7 @@ public record State<T>(String name, T dataItem, Transition... transitions) imple
         return JsonUtil.fromJson(stateJson, State.class);
     }
 
+    @JsonIgnore
     public List<Event> getEvents() {
         if (transitions == null) {
             return new ArrayList<>();
