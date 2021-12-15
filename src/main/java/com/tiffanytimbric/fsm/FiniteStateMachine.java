@@ -1,5 +1,6 @@
 package com.tiffanytimbric.fsm;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -21,6 +22,7 @@ public class FiniteStateMachine<T> implements Jsonable {
     private T dataItem;
     private boolean ignoreUnknownEvents;
     private State<T> initialState;
+    @JsonIgnore
     private State<T> currentState;
 
     private FiniteStateMachine() {
