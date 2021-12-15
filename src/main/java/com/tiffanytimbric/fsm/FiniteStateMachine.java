@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 
 import static java.lang.String.format;
 
@@ -92,7 +93,10 @@ public class FiniteStateMachine<T> implements Jsonable {
         final Optional<Transition> transitionOpt = currentState.getTransitionFor(event);
         if (transitionOpt.isPresent()) {
             final Transition transition = transitionOpt.get();
-            transition.handler().accept(currentState, event);
+            final BiConsumer handler = transition.handler();
+            if (handler != null) {
+                handler.accept(currentState, event);
+            }
 
             return currentState = transition.toState() != null ? transition.toState() : findState(transition.toStateName()).get();
         }
@@ -105,7 +109,10 @@ public class FiniteStateMachine<T> implements Jsonable {
     }
 
     public static FiniteStateMachine fromJson(final String fsmJson) {
-        return JsonUtil.fromJson(fsmJson, FiniteStateMachine.class);
+        final FiniteStateMachine fsm = JsonUtil.fromJson(fsmJson, FiniteStateMachine.class);
+        fsm.currentState = fsm.initialState;
+
+        return fsm;
     }
 
     @Override

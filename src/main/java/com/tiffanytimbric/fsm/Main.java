@@ -1,12 +1,46 @@
 package com.tiffanytimbric.fsm;
 
 
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        if (ArrayUtils.isEmpty(args)) {
+            exerciseTestFsm();
+        }
+        else {
+            exerciseSpecifiedFsm(args[0]);
+        }
+    }
+
+    private static void exerciseSpecifiedFsm(String filenameFsmJson) throws IOException {
+        final FiniteStateMachine<String> fsm = FiniteStateMachine.fromJson(
+            Files.newBufferedReader(Paths.get(filenameFsmJson)).lines().collect(Collectors.joining("\n")));
+
+        System.out.printf("%nFSM Definition:%n%s%n", fsm.toJson());
+
+        try (Scanner scanner = new Scanner(System.in)) {
+            do {
+                State<String> currentState = fsm.getCurrentState();
+                System.out.printf("%n\tCurrent State: \"%s\", \"%s\"%n", currentState.name(), currentState.dataItem());
+                System.out.printf("\tSupported Events: %s%n", currentState.getEvents().stream().map(Event::name).collect(Collectors.toList()));
+
+                System.out.print("Send event: ");
+                fsm.handleEvent(scanner.next());
+            }
+            while (true);
+        }
+    }
+
+    private static void exerciseTestFsm() {
         final FiniteStateMachine<String> fsm = createFsm("Test FSM");
 
         final String fsmJson = fsm.toJson();
