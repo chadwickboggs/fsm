@@ -29,7 +29,7 @@ public class FiniteStateMachine<T> implements Jsonable {
     private FiniteStateMachine() {
     }
 
-    public  FiniteStateMachine(final String fsmName, final T dataItem, final State<T> initialState) {
+    public FiniteStateMachine(final String fsmName, final T dataItem, final State<T> initialState) {
         this(fsmName, dataItem, initialState, true);
     }
 

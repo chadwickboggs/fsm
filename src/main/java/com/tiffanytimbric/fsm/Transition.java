@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.function.BiConsumer;
 
+
 @JsonSerialize
 @JsonTypeInfo( use = JsonTypeInfo.Id.CLASS )
 public record Transition<T, J>(
