@@ -8,11 +8,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(@Nonnull final String... args) throws IOException {
         if (ArrayUtils.isEmpty(args)) {
             exerciseTestFsm();
         }
@@ -21,7 +23,7 @@ public class Main {
         }
     }
 
-    private static void exerciseSpecifiedFsm(String filenameFsmJson) throws IOException {
+    private static void exerciseSpecifiedFsm(@Nonnull final String filenameFsmJson) throws IOException {
         final FiniteStateMachine<String> fsm = FiniteStateMachine.fromJson(
             Files.newBufferedReader(Paths.get(filenameFsmJson)).lines().collect(Collectors.joining("\n")));
 
@@ -63,7 +65,11 @@ public class Main {
         System.out.printf("%nFSM From-JSON JSON Definition:%n%s%n", fsmFromJson.toJson());
     }
 
-    private static <T> void sendEventVerbose(final String eventName, final T event_dataArg, final FiniteStateMachine<T> fsm) {
+    @Nonnull
+    private static <T> void sendEventVerbose(
+        @Nonnull final String eventName,
+        @Nullable final T event_dataArg,
+        @Nonnull final FiniteStateMachine<T> fsm) {
         System.out.printf("%n\tSending event: \"%s\"%n", eventName);
 
         fsm.handleEvent(eventName, event_dataArg);
@@ -73,7 +79,8 @@ public class Main {
         System.out.printf("\tSupported Events: %s%n", currentState.getEvents().stream().map(Event::name).collect(Collectors.toList()));
     }
 
-    private static FiniteStateMachine<String> createFsm(final String fsmName) {
+    @Nonnull
+    private static FiniteStateMachine<String> createFsm(@Nonnull final String fsmName) {
         final Event<String> afternoonShiftStartEvent = new Event("Afternoon Shift Start", "event_dataArg");
         final Event<String> postponeShiftStartEvent = new Event("Postpone Shift Start", "event_dataArg");
         final Event<String> lunchTimeEvent = new Event("Lunch Time", "event_dataArg");

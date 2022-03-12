@@ -12,17 +12,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 
 @JsonSerialize
 @JsonTypeInfo( use = JsonTypeInfo.Id.CLASS )
-public record State<T>(String name, T dataItem, Transition... transitions) implements Jsonable {
+public record State<T>(@Nonnull String name, @Nullable T dataItem, @Nullable Transition... transitions) implements Jsonable {
 
-    public static State fromJson(final String stateJson) {
+    @Nonnull
+    public static State fromJson(@Nonnull final String stateJson) {
         return JsonUtil.fromJson(stateJson, State.class);
     }
 
     @JsonIgnore
+    @Nullable
     public List<Event> getEvents() {
         if (transitions == null) {
             return new ArrayList<>();
@@ -31,11 +35,13 @@ public record State<T>(String name, T dataItem, Transition... transitions) imple
         return Arrays.stream(transitions).map(Transition::event).collect(Collectors.toList());
     }
 
-    public Optional<Transition> getTransitionFor(final String eventName) {
+    @Nonnull
+    public Optional<Transition> getTransitionFor(@Nonnull final String eventName) {
         return getTransitionFor(new Event(eventName, null));
     }
 
-    public Optional<Transition> getTransitionFor(final Event event) {
+    @Nonnull
+    public Optional<Transition> getTransitionFor(@Nonnull final Event event) {
         if (transitions == null) {
             return Optional.empty();
         }

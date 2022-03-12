@@ -3,6 +3,8 @@ package com.tiffanytimbric.fsm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.annotation.Nonnull;
+
 
 public class JsonUtil {
 
@@ -12,11 +14,15 @@ public class JsonUtil {
         objectMapper = new ObjectMapper();
     }
 
+    @Nonnull
     public static ObjectMapper getObjectMapper() {
         return objectMapper;
     }
 
-    public static <T> T fromJson(final String stateJson, final Class<T> clazz) {
+    @Nonnull
+    public static <T> T fromJson(
+        @Nonnull final String stateJson, @Nonnull final Class<T> clazz
+    ) {
         try {
             return getObjectMapper().readValue(stateJson, clazz);
         }
@@ -25,7 +31,8 @@ public class JsonUtil {
         }
     }
 
-    public static String toJson(final Jsonable jsonable) {
+    @Nonnull
+    public static String toJson(@Nonnull final Jsonable jsonable) {
         try {
             return getObjectMapper().writeValueAsString(jsonable);
         }

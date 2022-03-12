@@ -8,23 +8,39 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.function.BiConsumer;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 
 @JsonSerialize
 @JsonTypeInfo( use = JsonTypeInfo.Id.CLASS )
 public record Transition<T, J>(
-    Event<T> event, State<J> toState, String toStateName, @JsonIgnore BiConsumer<State<J>, Event<T>> handler) implements Jsonable {
+        @Nonnull Event<T> event,
+        @Nonnull State<J> toState,
+        @Nonnull String toStateName,
+        @JsonIgnore
+        @Nullable BiConsumer<State<J>, Event<T>> handler
+    ) implements Jsonable {
 
-    public static Transition fromJson(final String transitionJson) {
-        return JsonUtil.fromJson(transitionJson, Transition.class);
-    }
-
-    public Transition(Event<T> event, State<J> toState, BiConsumer<State<J>, Event<T>> handler) {
+    public Transition(
+        @Nonnull Event<T> event,
+        @Nonnull State<J> toState,
+        @Nullable BiConsumer<State<J>, Event<T>> handler
+    ) {
         this(event, toState, null, handler);
     }
 
-    public Transition(Event<T> event, String toStateName, BiConsumer<State<J>, Event<T>> handler) {
+    public Transition(
+        @Nonnull Event<T> event,
+        @Nonnull String toStateName,
+        @Nullable BiConsumer<State<J>, Event<T>> handler
+    ) {
         this(event, null, toStateName, handler);
+    }
+
+    @Nonnull
+    public static Transition fromJson(@Nonnull final String transitionJson) {
+        return JsonUtil.fromJson(transitionJson, Transition.class);
     }
 
     @Override

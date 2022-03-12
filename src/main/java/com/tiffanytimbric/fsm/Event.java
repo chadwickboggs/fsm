@@ -5,12 +5,16 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 
 @JsonSerialize
 @JsonTypeInfo( use = JsonTypeInfo.Id.CLASS )
-public record Event<T>(String name, T dataArg) implements Jsonable {
+public record Event<T>(@Nonnull String name, @Nullable T dataArg) implements Jsonable {
 
-    public static Event fromJson(final String eventJson) {
+    @Nonnull
+    public static Event fromJson(@Nonnull final String eventJson) {
         return JsonUtil.fromJson(eventJson, Event.class);
     }
 

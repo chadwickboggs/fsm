@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static java.lang.String.format;
 
@@ -77,7 +79,11 @@ public class FiniteStateMachine<T> implements Jsonable {
         return handleEvent(new Event(eventName, null));
     }
 
-    public State<T> handleEvent(final String eventName, final T dataArg) {
+    @Nonnull
+    public State<T> handleEvent(
+        @Nonnull final String eventName,
+        @Nullable final T dataArg
+    ) {
         return handleEvent(new Event(eventName, dataArg));
     }
 
