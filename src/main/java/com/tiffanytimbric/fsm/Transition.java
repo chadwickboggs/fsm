@@ -15,25 +15,19 @@ import javax.annotation.Nullable;
 @JsonSerialize
 @JsonTypeInfo( use = JsonTypeInfo.Id.CLASS )
 public record Transition<T, J>(
-        @Nonnull Event<T> event,
-        @Nonnull State<J> toState,
-        @Nonnull String toStateName,
+        @Nonnull Event<T> event, @Nonnull State<J> toState, @Nullable String toStateName,
         @JsonIgnore
         @Nullable BiConsumer<State<J>, Event<T>> handler
     ) implements Jsonable {
 
     public Transition(
-        @Nonnull Event<T> event,
-        @Nonnull State<J> toState,
-        @Nullable BiConsumer<State<J>, Event<T>> handler
+        @Nonnull Event<T> event, @Nonnull State<J> toState, @Nullable BiConsumer<State<J>, Event<T>> handler
     ) {
         this(event, toState, null, handler);
     }
 
     public Transition(
-        @Nonnull Event<T> event,
-        @Nonnull String toStateName,
-        @Nullable BiConsumer<State<J>, Event<T>> handler
+        @Nonnull Event<T> event, @Nonnull String toStateName, @Nullable BiConsumer<State<J>, Event<T>> handler
     ) {
         this(event, null, toStateName, handler);
     }

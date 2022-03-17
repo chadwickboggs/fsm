@@ -31,11 +31,16 @@ public class FiniteStateMachine<T> implements Jsonable {
     private FiniteStateMachine() {
     }
 
-    public FiniteStateMachine(final String fsmName, final T dataItem, final State<T> initialState) {
+    public FiniteStateMachine(
+        @Nonnull final String fsmName, @Nullable final T dataItem, @Nonnull final State<T> initialState
+    ) {
         this(fsmName, dataItem, initialState, true);
     }
 
-    public FiniteStateMachine(final String fsmName, final T dataItem, final State<T> initialState, boolean ignoreUnknownEvents) {
+    public FiniteStateMachine(
+        @Nonnull final String fsmName, @Nullable final T dataItem, @Nonnull final State<T> initialState,
+        boolean ignoreUnknownEvents
+    ) {
         this.name = fsmName;
         this.dataItem = dataItem;
         this.initialState = initialState;
@@ -43,18 +48,22 @@ public class FiniteStateMachine<T> implements Jsonable {
         this.ignoreUnknownEvents = ignoreUnknownEvents;
     }
 
+    @Nonnull
     public String getName() {
         return name;
     }
 
+    @Nullable
     public T getDataItem() {
         return dataItem;
     }
 
+    @Nonnull
     public State<T> getInitialState() {
         return initialState;
     }
 
+    @Nonnull
     public State<T> getCurrentState() {
         return currentState;
     }
@@ -63,11 +72,13 @@ public class FiniteStateMachine<T> implements Jsonable {
         return ignoreUnknownEvents;
     }
 
-    public List<Event> getEventsFor(final String stateName) {
+    @Nonnull
+    public List<Event> getEventsFor(@Nullable final String stateName) {
         return findState(stateName).map(State::getEvents).orElse(new ArrayList<>());
     }
 
-    public Optional<State<T>> findState(final String stateName) {
+    @Nonnull
+    public Optional<State<T>> findState(@Nullable final String stateName) {
         if (initialState.name().equals(stateName)) {
             return Optional.of(initialState);
         }
@@ -75,7 +86,8 @@ public class FiniteStateMachine<T> implements Jsonable {
         return findState(stateName, initialState.transitions());
     }
 
-    public State<T> handleEvent(final String eventName) {
+    @Nonnull
+    public State<T> handleEvent(@Nonnull final String eventName) {
         return handleEvent(new Event(eventName, null));
     }
 
@@ -87,7 +99,8 @@ public class FiniteStateMachine<T> implements Jsonable {
         return handleEvent(new Event(eventName, dataArg));
     }
 
-    public State<T> handleEvent(final Event<T> event) {
+    @Nonnull
+    public State<T> handleEvent(@Nonnull final Event<T> event) {
         if (currentState.transitions() == null) {
             if (!ignoreUnknownEvents) {
                 throw newUnrecognizedEventIllegalArgumentException(event);
@@ -114,7 +127,8 @@ public class FiniteStateMachine<T> implements Jsonable {
         return currentState;
     }
 
-    public static FiniteStateMachine fromJson(final String fsmJson) {
+    @Nonnull
+    public static FiniteStateMachine fromJson(@Nonnull final String fsmJson) {
         final FiniteStateMachine fsm = JsonUtil.fromJson(fsmJson, FiniteStateMachine.class);
         fsm.currentState = fsm.initialState;
 
@@ -145,7 +159,10 @@ public class FiniteStateMachine<T> implements Jsonable {
             .toHashCode();
     }
 
-    private <T, J> Optional<State<J>> findState(final String stateName, final Transition<T, J>[] transitions) {
+    @Nonnull
+    private <T, J> Optional<State<J>> findState(
+        @Nullable final String stateName, @Nonnull final Transition<T, J>[] transitions
+    ) {
         if (transitions == null) {
             return Optional.empty();
         }
@@ -156,7 +173,8 @@ public class FiniteStateMachine<T> implements Jsonable {
             .findFirst();
     }
 
-    private IllegalArgumentException newUnrecognizedEventIllegalArgumentException(final Event event) {
+    @Nonnull
+    private IllegalArgumentException newUnrecognizedEventIllegalArgumentException(@Nonnull final Event event) {
         return new IllegalArgumentException(format(
             "Unrecognized event.  Current state contains no handler for the specified event."
                 + "  Current State: \"%s\", Specified Event: \"%s\"",
