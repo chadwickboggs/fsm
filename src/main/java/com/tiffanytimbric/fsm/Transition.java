@@ -22,41 +22,41 @@ public record Transition<T, J>(
     public Transition(
         @Nonnull Event<T> event, @Nonnull State<J> toState, @Nullable BiConsumer<State<J>, Event<T>> handler
     ) {
-        this(event, toState, null, handler);
+        this( event, toState, null, handler );
     }
 
     public Transition(
         @Nonnull Event<T> event, @Nonnull String toStateName, @Nullable BiConsumer<State<J>, Event<T>> handler
     ) {
-        this(event, null, toStateName, handler);
+        this( event, null, toStateName, handler );
     }
 
     @Nonnull
-    public static Transition fromJson(@Nonnull final String transitionJson) {
-        return JsonUtil.fromJson(transitionJson, Transition.class);
+    public static Transition fromJson( @Nonnull final String transitionJson ) {
+        return JsonUtil.fromJson( transitionJson, Transition.class );
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) return false;
-        if (obj == this) return true;
-        if (obj.getClass() != getClass()) return false;
+    public boolean equals( Object obj ) {
+        if ( obj == null ) return false;
+        if ( obj == this ) return true;
+        if ( obj.getClass() != getClass() ) return false;
         Transition rhs = (Transition) obj;
         return new EqualsBuilder()
-            .append(this.event, rhs.event)
-            .append(this.toState, rhs.toState)
-            .append(this.toStateName, rhs.toStateName)
-            .append(this.handler, rhs.handler)
+            .append( this.event, rhs.event )
+            .append( this.toState, rhs.toState )
+            .append( this.toStateName, rhs.toStateName )
+            .append( this.handler, rhs.handler )
             .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-            .append(event)
-            .append(toState)
-            .append(toStateName)
-            .append(handler)
+            .append( event )
+            .append( toState )
+            .append( toStateName )
+            .append( handler )
             .toHashCode();
     }
 }

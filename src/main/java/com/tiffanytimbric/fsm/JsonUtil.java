@@ -24,20 +24,20 @@ public class JsonUtil {
         @Nonnull final String stateJson, @Nonnull final Class<T> clazz
     ) {
         try {
-            return getObjectMapper().readValue(stateJson, clazz);
+            return getObjectMapper().readValue( stateJson, clazz );
         }
-        catch (JsonProcessingException e) {
-            throw new RuntimeException(e.getMessage(), e);
+        catch ( JsonProcessingException e ) {
+            throw new RuntimeException( e.getMessage(), e );
         }
     }
 
     @Nonnull
-    public static String toJson(@Nonnull final Jsonable jsonable) {
+    public static String toJson( @Nonnull final Jsonable jsonable ) {
         try {
-            return getObjectMapper().writeValueAsString(jsonable);
+            return getObjectMapper().writeValueAsString( jsonable );
         }
-        catch (JsonProcessingException e) {
-            throw new RuntimeException(e.getMessage(), e);
+        catch ( JsonProcessingException e ) {
+            throw new RuntimeException( e.getMessage(), e );
         }
     }
 }

@@ -7,7 +7,7 @@ public interface Jsonable {
 
     @Nonnull
     default String toJson() {
-        return JsonUtil.toJson(this);
+        return JsonUtil.toJson( this );
     }
 
 }
