@@ -3,6 +3,7 @@ package com.tiffanytimbric.fsm;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -24,28 +25,29 @@ public class Main {
     }
 
     private static void exerciseSpecifiedFsm( @Nonnull final String filenameFsmJson ) throws IOException {
-        final FiniteStateMachine<String> fsm = FiniteStateMachine.fromJson(
-            Files.newBufferedReader( Paths.get( filenameFsmJson ) ).lines()
-                .collect( Collectors.joining( "\n" ) ) );
+        try (final BufferedReader bufferedReader = Files.newBufferedReader( Paths.get( filenameFsmJson ) )) {
+            final FiniteStateMachine<String> fsm = FiniteStateMachine.fromJson(
+                bufferedReader.lines().collect( Collectors.joining( "\n" ) ) );
 
-        System.out.printf( "%nFSM Definition:%n%s%n", fsm.toJson() );
+            System.out.printf( "%nFSM Definition:%n%s%n", fsm.toJson() );
 
-        try ( Scanner scanner = new Scanner( System.in ) ) {
-            do {
-                State<String> currentState = fsm.getCurrentState();
-                System.out.printf(
-                    "%n\tCurrent State: \"%s\", \"%s\"%n",
-                    currentState.name(), currentState.dataItem()
-                );
-                System.out.printf(
-                    "\tSupported Events: %s%n",
-                    currentState.getEvents().stream().map( Event::name ).collect( Collectors.toList() )
-                );
+            try ( Scanner scanner = new Scanner( System.in ) ) {
+                do {
+                    State<String> currentState = fsm.getCurrentState();
+                    System.out.printf(
+                        "%n\tCurrent State: \"%s\", \"%s\"%n",
+                        currentState.name(), currentState.dataItem()
+                    );
+                    System.out.printf(
+                        "\tSupported Events: %s%n",
+                        currentState.getEvents().stream().map( Event::name ).collect( Collectors.toList() )
+                    );
 
-                System.out.print( "Send event: " );
-                fsm.handleEvent( scanner.next() );
+                    System.out.print( "Send event: " );
+                    fsm.handleEvent( scanner.next() );
+                }
+                while ( true );
             }
-            while ( true );
         }
     }
 
@@ -75,7 +77,6 @@ public class Main {
         System.out.printf( "%nFSM From-JSON JSON Definition:%n%s%n", fsmFromJson.toJson() );
     }
 
-    @Nonnull
     private static <T> void sendEventVerbose(
         @Nonnull final String eventName,
         @Nullable final T event_dataArg,

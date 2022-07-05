@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 
 public class JsonUtil {
 
-    private static ObjectMapper objectMapper;
+    private final static ObjectMapper objectMapper;
 
     static {
         objectMapper = new ObjectMapper();

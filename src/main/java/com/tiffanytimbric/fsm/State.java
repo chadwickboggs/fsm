@@ -27,7 +27,7 @@ public record State<T>(@Nonnull String name, @Nullable T dataItem,
     }
 
     @JsonIgnore
-    @Nullable
+    @Nonnull
     public List<Event> getEvents() {
         if ( transitions == null ) {
             return new ArrayList<>();
