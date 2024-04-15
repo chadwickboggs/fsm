@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 public class Main {
 
-    private static final String USAGE = "USAGE:" +
+    private static final String USAGE = "Usage:" +
             "\n\t$ fsm [test | <fsm-definition-json-file-filename>]\n";
 
     public static void main(@Nonnull final String... args ) throws IOException {
