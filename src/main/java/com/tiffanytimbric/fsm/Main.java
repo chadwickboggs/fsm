@@ -2,26 +2,48 @@ package com.tiffanytimbric.fsm;
 
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 
 public class Main {
 
-    public static void main( @Nonnull final String... args ) throws IOException {
+    private static final String USAGE = "USAGE:" +
+            "\n\t$ fsm [test | <fsm-definition-json-file-filename>]\n";
+
+    public static void main(@Nonnull final String... args ) throws IOException {
         if ( ArrayUtils.isEmpty( args ) ) {
+            printUsage();
+
+            return;
+        }
+
+        final String arg1 = args[0];
+        if (StringUtils.isBlank(arg1)) {
+            printUsage();
+
+            return;
+        }
+
+        if ("test".equalsIgnoreCase(arg1.trim())) {
             exerciseTestFsm();
+
+            return;
         }
-        else {
-            exerciseSpecifiedFsm( args[0] );
-        }
+
+        exerciseSpecifiedFsm(arg1.trim());
+    }
+
+    private static void printUsage() {
+        System.out.println(USAGE);
     }
 
     private static void exerciseSpecifiedFsm( @Nonnull final String filenameFsmJson ) throws IOException {
