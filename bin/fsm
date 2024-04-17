@@ -1,0 +1,47 @@
+#!/bin/bash
+
+#JAVA_OPTS="${JAVA_OPTS} --source 19"
+#JAVA_OPTS="${JAVA_OPTS} --enable-preview"
+
+if [ "-g" == "${1}" ]; then
+    JAVA_OPTS="${JAVA_OPTS} -Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"
+    shift 1
+fi
+
+fsm_home="$(dirname ${0})"/..
+fsm_dist="${fsm_home}"/dist
+fsm_lib="${fsm_home}"/lib
+#fsm_dev_build_folder="${fsm_home}"/out/production/fsm
+fsm_dev_build_folder="${fsm_home}"/target/classes
+
+fsm_dist_escaped="$(/bin/echo "${fsm_dist}" | /usr/bin/sed 's/\//\\\//g')"
+fsm_lib_escaped="$(/bin/echo "${fsm_lib}" | /usr/bin/sed 's/\//\\\//g')"
+
+#
+# Add distribution to classpath.
+#
+
+dists="${fsm_dist}/$(/bin/ls "${fsm_dist}" | /usr/bin/tr '\n' ':')"
+dists="$(/bin/echo ${dists} | /usr/bin/sed "s/:/:${fsm_dist_escaped}\//g")"
+
+#
+# Add all library dependencies to classpath.
+#
+
+libs="${fsm_lib}/$(/bin/ls "${fsm_lib}" | /usr/bin/tr '\n' ':')"
+cp="${dists}:$(/bin/echo ${libs} | /usr/bin/sed "s/:/:${fsm_lib_escaped}\//g")"
+cp="${fsm_dev_build_folder}:${cp}"
+
+#
+# Prepend development output folder to classpath.
+#
+
+#cp="${fsm_home}/out/production/NtrUtil:${cp}"
+
+#
+# Execute the application.
+#
+
+java ${JAVA_OPTS} -cp "${cp}" com.tiffanytimbric.fsm.Main $@
+
+exit $?
