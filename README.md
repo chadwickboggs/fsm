@@ -58,7 +58,8 @@ This is an example FSM build via the Java API.
     {"@class":"com.tiffanytimbric.fsm.FiniteStateMachine","name":"Test FSM","dataItem":"fsm_dataItem","ignoreUnknownEvents":true,"initialState":{"@class":"com.tiffanytimbric.fsm.State","name":"Morning Shift","dataItem":"state_dataItem","transitions":[{"@class":"com.tiffanytimbric.fsm.Transition","event":{"@class":"com.tiffanytimbric.fsm.Event","name":"Lunch Time","dataArg":"event_dataArg"},"toState":{"@class":"com.tiffanytimbric.fsm.State","name":"At Lunch","dataItem":"state_dataItem","transitions":[{"@class":"com.tiffanytimbric.fsm.Transition","event":{"@class":"com.tiffanytimbric.fsm.Event","name":"Afternoon Shift Start","dataArg":"event_dataArg"},"toState":{"@class":"com.tiffanytimbric.fsm.State","name":"Afternoon Shift","dataItem":"state_dataItem","transitions":[{"@class":"com.tiffanytimbric.fsm.Transition","event":{"@class":"com.tiffanytimbric.fsm.Event","name":"Postpone Shift Start","dataArg":"event_dataArg"},"toState":null,"toStateName":"At Lunch"}]},"toStateName":null}]},"toStateName":null}]}}
 
 ## Example 2: Entity View Mode FSM
-This is a custom FSM read from a JSON file.  It is interacted with dynamically on the command shell via the "Send Event:" command prompt. 
+This is a custom FSM read from a JSON file.  It is interacted with dynamically
+on the command shell via the "Send Event:" command prompt. 
 
     $ fsm fsm-entity-view-mode.json
 
