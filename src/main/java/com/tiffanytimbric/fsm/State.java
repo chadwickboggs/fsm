@@ -7,22 +7,27 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 
 @JsonSerialize
 @JsonTypeInfo( use = JsonTypeInfo.Id.CLASS )
-public record State<T>(@Nonnull String name, @Nullable T dataItem,
-                       @Nullable Transition... transitions) implements Jsonable {
+public record State<T>(
+        @Nonnull String name,
+        @Nullable T dataItem,
+        @Nullable Transition... transitions
+) implements Jsonable {
 
     @Nonnull
-    public static State fromJson( @Nonnull final String stateJson ) {
+    public static State fromJson(
+            @Nonnull final String stateJson
+    ) {
         return JsonUtil.fromJson( stateJson, State.class );
     }
 
@@ -37,12 +42,16 @@ public record State<T>(@Nonnull String name, @Nullable T dataItem,
     }
 
     @Nonnull
-    public Optional<Transition> getTransitionFor( @Nonnull final String eventName ) {
+    public Optional<Transition> getTransitionFor(
+            @Nonnull final String eventName
+    ) {
         return getTransitionFor( new Event( eventName, null ) );
     }
 
     @Nonnull
-    public Optional<Transition> getTransitionFor( @Nonnull final Event event ) {
+    public Optional<Transition> getTransitionFor(
+            @Nonnull final Event event
+    ) {
         if ( transitions == null ) {
             return Optional.empty();
         }
@@ -53,7 +62,9 @@ public record State<T>(@Nonnull String name, @Nullable T dataItem,
     }
 
     @Override
-    public boolean equals( Object obj ) {
+    public boolean equals(
+            @Nullable final Object obj
+    ) {
         if ( obj == null ) return false;
         if ( obj == this ) return true;
         if ( obj.getClass() != getClass() ) return false;

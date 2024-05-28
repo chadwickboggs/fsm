@@ -21,7 +21,8 @@ public class JsonUtil {
 
     @Nonnull
     public static <T> T fromJson(
-        @Nonnull final String stateJson, @Nonnull final Class<T> clazz
+            @Nonnull final String stateJson,
+            @Nonnull final Class<T> clazz
     ) {
         try {
             return getObjectMapper().readValue( stateJson, clazz );
@@ -32,7 +33,9 @@ public class JsonUtil {
     }
 
     @Nonnull
-    public static String toJson( @Nonnull final Jsonable jsonable ) {
+    public static String toJson(
+            @Nonnull final Jsonable jsonable
+    ) {
         try {
             return getObjectMapper().writeValueAsString( jsonable );
         }

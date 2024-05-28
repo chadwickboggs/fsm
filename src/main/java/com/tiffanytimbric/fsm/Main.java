@@ -19,7 +19,9 @@ public class Main {
     private static final String USAGE = "Usage:" +
             "\n\t$ fsm [test | <fsm-definition-json-file-filename>]\n";
 
-    public static void main( @Nonnull final String... args ) throws IOException {
+    public static void main(
+            @Nonnull final String... args
+    ) throws IOException {
         if ( ArrayUtils.isEmpty( args ) ) {
             printUsage();
 
@@ -46,7 +48,9 @@ public class Main {
         System.out.println(USAGE);
     }
 
-    private static void exerciseSpecifiedFsm( @Nonnull final String filenameFsmJson ) throws IOException {
+    private static void exerciseSpecifiedFsm(
+            @Nonnull final String filenameFsmJson
+    ) throws IOException {
         try (final BufferedReader bufferedReader = Files.newBufferedReader( Paths.get( filenameFsmJson ) )) {
             final FiniteStateMachine<String> fsm = FiniteStateMachine.fromJson(
                 bufferedReader.lines().collect( Collectors.joining( "\n" ) ) );
@@ -100,9 +104,10 @@ public class Main {
     }
 
     private static <T> void sendEventVerbose(
-        @Nonnull final String eventName,
-        @Nullable final T event_dataArg,
-        @Nonnull final FiniteStateMachine<T> fsm ) {
+            @Nonnull final String eventName,
+            @Nullable final T event_dataArg,
+            @Nonnull final FiniteStateMachine<T> fsm
+    ) {
         System.out.printf( "%n\tSending event: \"%s\"%n", eventName );
 
         fsm.handleEvent( eventName, event_dataArg );
@@ -116,7 +121,9 @@ public class Main {
     }
 
     @Nonnull
-    private static FiniteStateMachine<String> createFsm( @Nonnull final String fsmName ) {
+    private static FiniteStateMachine<String> createFsm(
+            @Nonnull final String fsmName
+    ) {
         final Event<String> afternoonShiftStartEvent =
             new Event( "Afternoon Shift Start", "event_dataArg" );
         final Event<String> postponeShiftStartEvent =
@@ -125,21 +132,21 @@ public class Main {
 
         final State<String> endState = new State(
             "Afternoon Shift", "state_dataItem", new Transition<String, String>(
-            postponeShiftStartEvent, "At Lunch",
+            postponeShiftStartEvent, null, "At Lunch",
             ( fromState, event ) -> System.out.printf(
                 "\thandleEvent(\"%s\", \"%s\"): Transitioning To State \"%s\".%n",
                 event.name(), event.dataArg(), "At Lunch" ) ) );
 
         final State<String> lunchState = new State(
             "At Lunch", "state_dataItem", new Transition<>(
-            afternoonShiftStartEvent, endState,
+            afternoonShiftStartEvent, null, endState,
             ( fromState, event ) -> System.out.printf(
                 "\thandleEvent(\"%s\", \"%s\"): Transitioning To State \"%s\".%n",
                 event.name(), event.dataArg(), endState.name() ) ) );
 
         final State<String> initialState = new State(
             "Morning Shift", "state_dataItem", new Transition<>(
-            lunchTimeEvent, lunchState,
+            lunchTimeEvent, null, lunchState,
             ( fromState, event ) -> System.out.printf(
                 "\thandleEvent(\"%s\", \"%s\"): Transitioning To State \"%s\".%n",
                 event.name(), event.dataArg(), lunchState.name() ) ) );
