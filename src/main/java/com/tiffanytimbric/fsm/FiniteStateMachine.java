@@ -83,6 +83,12 @@ public class FiniteStateMachine<T> implements Jsonable {
         return currentState;
     }
 
+    public void setCurrentState(
+            @Nonnull final State<T> currentState
+    ) {
+        this.currentState = currentState;
+    }
+
     public boolean isIgnoreUnknownEvents() {
         return ignoreUnknownEvents;
     }
