@@ -6,13 +6,14 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 import static java.lang.String.format;
 
@@ -32,13 +33,17 @@ public class FiniteStateMachine<T> implements Jsonable {
     }
 
     public FiniteStateMachine(
-        @Nonnull final String fsmName, @Nullable final T dataItem, @Nonnull final State<T> initialState
+            @Nonnull final String fsmName,
+            @Nullable final T dataItem,
+            @Nonnull final State<T> initialState
     ) {
         this( fsmName, dataItem, initialState, true );
     }
 
     public FiniteStateMachine(
-        @Nonnull final String fsmName, @Nullable final T dataItem, @Nonnull final State<T> initialState,
+            @Nonnull final String fsmName,
+            @Nullable final T dataItem,
+            @Nonnull final State<T> initialState,
         boolean ignoreUnknownEvents
     ) {
         this.name = fsmName;
@@ -49,7 +54,9 @@ public class FiniteStateMachine<T> implements Jsonable {
     }
 
     @Nonnull
-    public static FiniteStateMachine fromJson( @Nonnull final String fsmJson ) {
+    public static FiniteStateMachine fromJson(
+            @Nonnull final String fsmJson
+    ) {
         final FiniteStateMachine fsm = JsonUtil.fromJson( fsmJson, FiniteStateMachine.class );
         fsm.currentState = fsm.initialState;
 
@@ -81,12 +88,16 @@ public class FiniteStateMachine<T> implements Jsonable {
     }
 
     @Nonnull
-    public List<Event> getEventsFor( @Nullable final String stateName ) {
+    public List<Event> getEventsFor(
+            @Nullable final String stateName
+    ) {
         return findState( stateName ).map( State::getEvents ).orElse( new ArrayList<>() );
     }
 
     @Nonnull
-    public Optional<State<T>> findState( @Nullable final String stateName ) {
+    public Optional<State<T>> findState(
+            @Nullable final String stateName
+    ) {
         if ( initialState.name().equals( stateName ) ) {
             return Optional.of( initialState );
         }
@@ -95,20 +106,24 @@ public class FiniteStateMachine<T> implements Jsonable {
     }
 
     @Nonnull
-    public State<T> handleEvent( @Nonnull final String eventName ) {
+    public State<T> handleEvent(
+            @Nonnull final String eventName
+    ) {
         return handleEvent( new Event( eventName, null ) );
     }
 
     @Nonnull
     public State<T> handleEvent(
-        @Nonnull final String eventName,
-        @Nullable final T dataArg
+            @Nonnull final String eventName,
+            @Nullable final T dataArg
     ) {
         return handleEvent( new Event( eventName, dataArg ) );
     }
 
     @Nonnull
-    public State<T> handleEvent( @Nonnull final Event<T> event ) {
+    public State<T> handleEvent(
+            @Nonnull final Event<T> event
+    ) {
         if ( currentState.transitions() == null ) {
             if ( !ignoreUnknownEvents ) {
                 throw newUnrecognizedEventIllegalArgumentException( event );
@@ -125,6 +140,11 @@ public class FiniteStateMachine<T> implements Jsonable {
                 handler.accept( currentState, event );
             }
 
+            final Predicate condition = transition.condition();
+            if (condition != null && !condition.test( currentState )) {
+                return currentState;
+            }
+
             return currentState =
                 transition.toState() != null
                     ? transition.toState()
@@ -139,7 +159,9 @@ public class FiniteStateMachine<T> implements Jsonable {
     }
 
     @Override
-    public boolean equals( Object obj ) {
+    public boolean equals(
+            @Nullable final Object obj
+    ) {
         if ( obj == null ) return false;
         if ( obj == this ) return true;
         if ( obj.getClass() != getClass() ) return false;
@@ -164,7 +186,8 @@ public class FiniteStateMachine<T> implements Jsonable {
 
     @Nonnull
     private <T, J> Optional<State<J>> findState(
-        @Nullable final String stateName, @Nonnull final Transition<T, J>[] transitions
+            @Nullable final String stateName,
+            @Nonnull final Transition<T, J>[] transitions
     ) {
         if ( transitions == null ) {
             return Optional.empty();
@@ -177,7 +200,9 @@ public class FiniteStateMachine<T> implements Jsonable {
     }
 
     @Nonnull
-    private IllegalArgumentException newUnrecognizedEventIllegalArgumentException( @Nonnull final Event event ) {
+    private IllegalArgumentException newUnrecognizedEventIllegalArgumentException(
+            @Nonnull final Event event
+    ) {
         return new IllegalArgumentException( format(
             "Unrecognized event.  Current state contains no handler for the specified event."
                 + "  Current State: \"%s\", Specified Event: \"%s\"",
