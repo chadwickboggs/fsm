@@ -3,6 +3,7 @@ package com.tiffanytimbric.fsm;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -104,7 +105,7 @@ public class FiniteStateMachine<T> implements Jsonable {
     public Optional<State<T>> findState(
             @Nullable final String stateName
     ) {
-        if ( initialState.name().equals( stateName ) ) {
+        if ( initialState.name().equalsIgnoreCase( stateName ) ) {
             return Optional.of( initialState );
         }
 
@@ -195,14 +196,25 @@ public class FiniteStateMachine<T> implements Jsonable {
             @Nullable final String stateName,
             @Nonnull final Transition<T, J>[] transitions
     ) {
-        if ( transitions == null ) {
+        if (transitions == null) {
             return Optional.empty();
         }
 
-        return Arrays.stream( transitions )
-            .map( Transition::toState )
-            .filter( state -> state.name().equals( stateName ) )
-            .findFirst();
+        final Optional<State<J>> foundStateOpt = Arrays.stream(transitions)
+                .map(Transition::toState)
+                .filter(toState -> toState.name().equalsIgnoreCase(stateName))
+                .findFirst();
+        if (foundStateOpt.isPresent()) {
+            return foundStateOpt;
+        }
+
+        return Arrays.stream(transitions)
+                .filter(transition -> ArrayUtils.isNotEmpty(transition.toState().transitions()))
+                .map(transition -> findState(
+                        stateName, transition.toState().transitions()
+                ))
+                .findFirst()
+                .orElse(Optional.empty());
     }
 
     @Nonnull
