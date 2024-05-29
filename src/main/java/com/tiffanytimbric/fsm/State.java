@@ -45,20 +45,22 @@ public record State<T>(
     public Optional<Transition> getTransitionFor(
             @Nonnull final String eventName
     ) {
-        return getTransitionFor( new Event( eventName, null ) );
+        if ( transitions == null ) {
+            return Optional.empty();
+        }
+
+        return Arrays.stream( transitions )
+                .filter( transition ->
+                        transition.event().name().equalsIgnoreCase(eventName)
+                )
+                .findFirst();
     }
 
     @Nonnull
     public Optional<Transition> getTransitionFor(
             @Nonnull final Event event
     ) {
-        if ( transitions == null ) {
-            return Optional.empty();
-        }
-
-        return Arrays.stream( transitions )
-            .filter( transition -> event.equals( transition.event() ) )
-            .findFirst();
+        return getTransitionFor(event.name());
     }
 
     @Override
