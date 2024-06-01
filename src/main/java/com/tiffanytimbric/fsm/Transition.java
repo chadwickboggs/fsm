@@ -17,7 +17,7 @@ import java.util.function.Predicate;
 @JsonTypeInfo( use = JsonTypeInfo.Id.CLASS )
 public record Transition<T, J>(
         @Nonnull Event<T> event,
-        @Nullable Predicate<State<J>> condition,
+        @Nullable Predicate<J> condition,
         @Nullable State<J> toState,
         @Nullable String toStateName,
         @JsonIgnore @Nullable BiConsumer<State<J>, Event<T>> handler
@@ -25,7 +25,7 @@ public record Transition<T, J>(
 
     public Transition(
             @Nonnull Event<T> event,
-            @Nullable Predicate<State<J>> condition,
+            @Nullable Predicate<J> condition,
             @Nonnull State<J> toState,
             @Nullable BiConsumer<State<J>, Event<T>> handler
     ) {
@@ -34,7 +34,7 @@ public record Transition<T, J>(
 
     public Transition(
             @Nonnull Event<T> event,
-            @Nullable Predicate<State<J>> condition,
+            @Nullable Predicate<J> condition,
             @Nonnull String toStateName,
             @Nullable BiConsumer<State<J>, Event<T>> handler
     ) {

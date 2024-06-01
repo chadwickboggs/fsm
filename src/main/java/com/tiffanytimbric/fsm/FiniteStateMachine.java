@@ -148,7 +148,7 @@ public class FiniteStateMachine<T> implements Jsonable {
             }
 
             final Predicate condition = transition.condition();
-            if (condition != null && !condition.test( currentState )) {
+            if (condition != null && !condition.test( currentState.dataItem() )) {
                 return currentState;
             }
 
